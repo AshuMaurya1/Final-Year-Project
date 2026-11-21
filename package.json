@@ -1,0 +1,11 @@
+{
+  "name": "akgec-trafficai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AKGEC AI-Based Traffic Congestion Prediction & Dynamic Signal Control System",
+  "scripts": {
+    "setup": "npm --prefix frontend install && npm --prefix frontend run build",
+    "start": "node scripts/ensure-frontend.js && node backend_service/server.js",
+    "dev": "node scripts/ensure-frontend.js && node backend_service/server.js"
+  }
+}

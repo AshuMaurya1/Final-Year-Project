@@ -1,0 +1,262 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset="utf-8">
+<title>Invention Disclosure Form - AKGEC IPR Cell</title>
+<!--[if gte mso 9]>
+<xml>
+<w:WordDocument>
+<w:View>Print</w:View>
+<w:Zoom>100</w:Zoom>
+<w:DoNotOptimizeForBrowser/>
+</w:WordDocument>
+</xml>
+<![endif]-->
+<style>
+  body {
+    font-family: 'Times New Roman', serif;
+    font-size: 11pt;
+    line-height: 1.4;
+    color: #000;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+  }
+  table, th, td {
+    border: 1px solid #333;
+  }
+  th {
+    background-color: #E6E6E6;
+    padding: 6px;
+    font-weight: bold;
+    text-align: left;
+  }
+  td {
+    padding: 6px;
+  }
+  .header {
+    text-align: center;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+  }
+  .section-title {
+    font-weight: bold;
+    font-size: 11pt;
+    background-color: #F0F0F0;
+    padding: 4px;
+    margin-top: 15px;
+    margin-bottom: 6px;
+    border-left: 4px solid #1E3A8A;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h2 style="margin:0; text-transform:uppercase;">AJAY KUMAR GARG ENGINEERING COLLEGE, GHAZIABAD</h2>
+  <h3 style="margin:4px 0; text-transform:uppercase; color:#1E3A8A;">Department of Computer Science & Engineering</h3>
+  <h3 style="margin:4px 0; text-transform:uppercase; color:#B91C1C;">IPR CELL — INVENTION DISCLOSURE FORM (IDF)</h3>
+</div>
+
+<p style="border: 1px dashed #B91C1C; padding: 6px; font-size: 9.5pt; color: #B91C1C;">
+<strong>CONFIDENTIALITY NOTICE:</strong> This Invention Disclosure Form (IDF) is the first step in the Institute's process of Identifying Patents. IDF should be treated as strictly confidential until a patent application is filed or an invention is publicly disclosed.
+</p>
+
+<div class="section-title">1. Particulars of Inventor(s)</div>
+<table>
+  <tr>
+    <th style="width:6%;">S.No</th>
+    <th style="width:26%;">Name of Inventor(s)</th>
+    <th style="width:16%;">Designation</th>
+    <th style="width:10%;">Dept</th>
+    <th style="width:24%;">Email Address</th>
+    <th style="width:18%;">Phone Number</th>
+  </tr>
+  <tr>
+    <td align="center">1</td>
+    <td><strong>Ashu Kumar Maurya</strong></td>
+    <td>Student</td>
+    <td>CSE</td>
+    <td>ashumaurya2597@gmail.com</td>
+    <td>9170661995</td>
+  </tr>
+  <tr>
+    <td align="center">2</td>
+    <td><strong>Vishnukant Yadav</strong></td>
+    <td>Student</td>
+    <td>CSE</td>
+    <td>Vishnukantyadav806@gmail.com</td>
+    <td>9369808148</td>
+  </tr>
+  <tr>
+    <td align="center">3</td>
+    <td><strong>Priyanka Maurya</strong></td>
+    <td>Student</td>
+    <td>CSE</td>
+    <td>Priyankamaurya5671@gmail.com</td>
+    <td>9289269388</td>
+  </tr>
+  <tr>
+    <td align="center">4</td>
+    <td><strong>Priya</strong></td>
+    <td>Student</td>
+    <td>CSE</td>
+    <td>Priyakushwaha83036@gmail.com</td>
+    <td>8303612045</td>
+  </tr>
+  <tr>
+    <td align="center">5</td>
+    <td><strong>Mr. Mahesh Kumar Sharma</strong></td>
+    <td>Assistant Professor</td>
+    <td>CSE</td>
+    <td>maheshsharma@akgec.ac.in</td>
+    <td>9871103160</td>
+  </tr>
+</table>
+
+<div class="section-title">2. Descriptive Title of the Invention</div>
+<p style="font-weight:bold; margin:6px 0;">AI-Based Traffic Congestion Prediction and Dynamic Signal Control System</p>
+
+<div class="section-title">3. Abstract (100 words or less)</div>
+<p style="text-align:justify; margin:6px 0;">
+The invention relates to an intelligent traffic management system that uses artificial intelligence and real-time sensor data (cameras, IoT sensors and GPS/vehicle probe data) to predict traffic congestion before it occurs and dynamically control traffic signal timings accordingly. A machine learning/deep learning model analyses historical and live traffic patterns, weather and event data to forecast congestion at intersections and road segments. Based on these predictions, an adaptive signal control module automatically adjusts green-light duration, phase sequence and cycle length across coordinated intersections in real time, reducing waiting time, fuel consumption and emissions while improving overall traffic flow and road safety.
+</p>
+
+<div class="section-title">4. Detailed Description of the Invention</div>
+<p><strong>a. Problem the invention is solving:</strong><br>
+Conventional traffic signals operate on fixed or pre-timed schedules and cannot adapt to real-time fluctuations in traffic volume. This leads to unnecessary congestion, increased travel time, fuel wastage, pollution and higher accident risk, especially during peak hours, festivals, accidents or other unplanned events.</p>
+
+<p><strong>b. Technical features of the invention:</strong><br>
+The system comprises: (i) a multi-source data acquisition layer using CCTV cameras, inductive-loop/IoT sensors, GPS-based vehicle probe data and weather feeds; (ii) a data pre-processing and feature-extraction module; (iii) an AI/deep-learning prediction engine (e.g., XGBoost, Random Forest, LSTM/GRU) that forecasts congestion at each intersection/road segment in advance; (iv) an adaptive dynamic signal control algorithm that computes the optimal green time, phase sequence and offset for each junction bounded by strict safety invariants (minimum green: 10s, maximum green: 60s, yellow: 4s, all-red: 2s); (v) an edge/cloud computing architecture with vehicle-to-infrastructure (V2I) communication; (vi) a central dashboard showing real-time congestion heat-maps and alerts; and (vii) a fail-safe fallback to standard fixed-time operation if the system or connectivity fails.</p>
+
+<p><strong>c. General Utility/application of the invention:</strong><br>
+Applicable to urban traffic intersections and corridors, smart-city traffic management systems, highway entry/toll points, emergency-vehicle priority routing, and event or stadium traffic management.</p>
+
+<p><strong>d. Advantages of the invention:</strong><br>
+Reduces average vehicle waiting and travel time, lowers fuel consumption and vehicular emissions, improves intersection throughput, reduces congestion-related accidents, enables green-corridor priority for emergency vehicles, scales to a city-wide network of intersections, and reduces dependence on manual traffic-police intervention.</p>
+
+<p><strong>e. Best way of using the invention as well as possible variants:</strong><br>
+The primary embodiment is deployed at urban intersections using camera and loop sensors feeding an edge controller or central AI server that coordinates signal timing across a network of junctions. Variants include: use of only smartphone/GPS crowd-sourced data for low-infrastructure regions; integration of an emergency-vehicle detection and priority module; and an edge-AI variant that performs inference locally at the signal controller cabinet for low-latency operation without dependence on continuous cloud connectivity.</p>
+
+<p><strong>f. Drawing, schematics, and flow diagrams:</strong><br>
+End-to-end closed-loop system architecture comprises 5 integrated layers: (1) Data Collection Layer, (2) Preprocessing & Validation Layer, (3) AI/ML Intelligence & Prediction Layer, (4) Dynamic Timing & Safety Invariant Engine, and (5) Hardware Actuation and Central Dashboard Monitoring Layer with autonomous fallback and emergency priority overrides.</p>
+
+<p><strong>g. Reference to relevant patent and publication:</strong></p>
+<ol>
+  <li>Sharma, C., Prasad, A., & Ibrahim, S. S. (2026, May). AI-powered solutions for safer driving: Traffic forecasting and dynamic signal control using LSTM. In AIP Conf. Proc. (Vol. 3410, No. 1, p. 020028).</li>
+  <li>Malathi, D., et al. (2025, January). AI-powered traffic management: Improving congestion detection and signal regulation. In 2025 IEEE ICMSCI (pp. 899-904).</li>
+  <li>Korepu, M. (2025, June). Optimization of Smart Traffic Systems Using AI-Based Adaptive Signal Control. In 2025 IEEE ICOCT (pp. 1-7).</li>
+  <li>Agrahari, A., et al. (2024). Artificial intelligence-based adaptive traffic signal control system: A comprehensive review. Electronics, 13(19), 3875.</li>
+  <li>Kadkhodayi, A., et al. (2023). Artificial intelligence-based real-time traffic management. J. Electr. Electron. Eng, 2(4), 368-373.</li>
+  <li>Neelakandan, S. B. M. A. T. S. D. V. B. B. I., et al. (2021). IoT-based traffic prediction and traffic signal control system for smart city. Soft Computing, 25(18), 12241-12248.</li>
+</ol>
+
+<div class="section-title">5. Primary Patent Search Conducted?</div>
+<p><strong>Yes.</strong> A preliminary literature and patent-landscape search was carried out by the inventors. No identical or substantially similar patent combining predictive AI-based congestion forecasting with network-wide dynamic signal coordination bounded by safety invariants was found.</p>
+
+<div class="section-title">6. Existing State-of-the-Art and Prior Arts</div>
+<p style="text-align:justify;">Present-day traffic control largely relies on fixed-time signal plans or reactive adaptive systems (e.g., SCOOT/SCATS) that adjust timing based on currently detected congestion using loop detectors, and on manual control by traffic police at busy junctions. These approaches respond only after congestion has already formed and typically optimise a single intersection in isolation, rather than predicting congestion in advance and coordinating signal timing across a network of intersections.</p>
+
+<div class="section-title">7. Comparison with Existing State-of-the-Art Approaches</div>
+<table>
+  <tr>
+    <th style="width:6%;">S.No</th>
+    <th style="width:26%;">Existing State of Art</th>
+    <th style="width:34%;">Drawbacks in Existing State of Art</th>
+    <th style="width:34%;">How Invention Overcomes the Drawback</th>
+  </tr>
+  <tr>
+    <td align="center">1</td>
+    <td>Fixed-time / pre-programmed traffic signals</td>
+    <td>Cannot adapt to real-time variation in traffic volume; causes long queues and wasted green time during low-traffic phases.</td>
+    <td>The proposed AI model predicts congestion in advance and dynamically adjusts signal timing in real time to match actual demand.</td>
+  </tr>
+  <tr>
+    <td align="center">2</td>
+    <td>Adaptive systems such as SCOOT/SCATS (loop-detector based, reactive)</td>
+    <td>Only react to congestion after it has already formed; optimise a single intersection in isolation rather than the network.</td>
+    <td>Uses predictive AI to forecast congestion before it forms and optimises signal timing across a coordinated network of intersections.</td>
+  </tr>
+  <tr>
+    <td align="center">3</td>
+    <td>Manual control by traffic police at busy junctions</td>
+    <td>Labour-intensive, inconsistent, delayed response, and not scalable to an entire city.</td>
+    <td>Fully automated, data-driven system that scales to city-wide deployment and provides real-time alerts to the control room.</td>
+  </tr>
+</table>
+
+<div class="section-title">8. Technical Features and Elements of the Invention</div>
+<p>Key technical features/elements: (i) an AI/deep-learning based congestion-prediction module; (ii) multi-sensor data fusion combining camera, loop/IoT sensor and GPS probe data; (iii) a dynamic signal-timing optimisation engine; (iv) cloud/edge computing infrastructure with V2I communication; (v) a central real-time monitoring dashboard; (vi) an emergency-vehicle detection and priority module; and (vii) a fail-safe manual-override and stale-data fallback mechanism.</p>
+
+<div class="section-title">9. Novel Features Believed to be New and Distinguishing</div>
+<p style="text-align:justify;">The invention is believed to be new in combining: (a) predictive (rather than merely reactive) congestion forecasting using deep learning; (b) fusion of camera, IoT-sensor, GPS and weather data not jointly used in existing systems; (c) network-wide coordinated signal optimisation rather than single-intersection control; (d) a self-learning system that continuously improves from live traffic feedback; and (e) integrated emergency-vehicle priority within the same predictive-control framework with deterministic safety bounds.</p>
+
+<div class="section-title">10. Prototype Implementation & Testing Evidence</div>
+<p style="text-align:justify;"><strong>Yes. Built, tested, and implemented.</strong> A working prototype/simulation of the proposed system was designed, built and tested by the inventors as part of their final-year B.Tech project in the Department of Computer Science & Engineering, Ajay Kumar Garg Engineering College, Ghaziabad, under the guidance of Mr. Mahesh Kumar Sharma, Assistant Professor. The prototype was evaluated on test traffic scenarios, which demonstrated an approximate <strong>40.8% reduction in average waiting time</strong>, a <strong>41.2% reduction in average queue lengths</strong>, and a <strong>33% reduction in the congestion index</strong> compared to fixed-time signal control. Complete source code and demonstration reports are maintained by the inventors.</p>
+
+<div class="section-title">11. Conception of the Idea</div>
+<p style="text-align:justify;">The idea was conceived jointly by the inventors during final-year project discussions in the Department of Computer Science & Engineering, Ajay Kumar Garg Engineering College, Ghaziabad, after observing that fixed-time traffic signals at urban intersections could not adapt to real-time traffic demand, leading to avoidable congestion, waiting time and fuel wastage. Upon reviewing existing adaptive traffic-control systems and recent AI/ML literature on traffic forecasting, the inventors formulated the concept of combining predictive, deep-learning based congestion forecasting with a network-coordinated dynamic signal-control system, under the guidance of their supervisor, Mr. Mahesh Kumar Sharma.</p>
+
+<div class="section-title">12. Sale, Public Use, or Disclosure</div>
+<p>No sale, offer for sale, or public use of the invention has been made to date. The invention has been discussed only internally among the inventors and with their project supervisor and department, in the course of academic project guidance and evaluation. No external publication, demonstration or disclosure of the invention has been made as of the date of this form.</p>
+
+<div class="section-title">13. Non-Obviousness Justification</div>
+<p style="text-align:justify;">Combining predictive, deep-learning based multi-horizon congestion forecasting with a network-coordinated dynamic signal controller is not a straightforward extension of existing rule-based adaptive systems such as SCOOT/SCATS. Prior systems react only after congestion has already formed, whereas this invention pre-emptively adjusts signal plans before congestion occurs. This requires a non-trivial fusion of heterogeneous real-time data streams and a novel closed-loop prediction-control architecture that a person of ordinary skill would not arrive at without inventive effort.</p>
+
+<div class="section-title">14. Hardware Components Involved</div>
+<p>CCTV cameras and image sensors; inductive-loop/ultrasonic/IoT traffic sensors; GPS-enabled probe vehicles/smartphones for crowd-sourced data; edge/fog computing unit (industrial PC/single-board computer) at each intersection for local inference; central cloud server hosting the AI prediction and signal-coordination engine; communication network (4G/5G/LoRaWAN/fibre) linking intersections; IoT-enabled relay/control interface to signal controller hardware; control-room monitoring dashboard; and power backup unit.</p>
+
+<div class="section-title">15. Societal, Environmental & Economic Benefits</div>
+<p style="text-align:justify;">The invention reduces commuter travel time and fuel wastage, lowers vehicular emissions and thereby supports environmental sustainability, reduces congestion-related accidents, enables faster emergency response through green corridors for ambulances and fire trucks, supports smart-city and sustainable urban-mobility initiatives, and reduces the economic loss caused by traffic delays.</p>
+
+<div class="section-title">16. Additional Information & Future Scope</div>
+<p>The system can be integrated with existing Smart City Intelligent Transportation System (ITS) infrastructure and can be extended in future work to incorporate vehicle-to-vehicle/vehicle-to-everything (V2V/V2X) communication with autonomous vehicles for further optimisation.</p>
+
+<br>
+<hr>
+<h3 style="text-transform:uppercase; margin-bottom:5px;">Inventors' Declaration & Signatures</h3>
+<p style="font-size:9.5pt;">We hereby declare that all the information provided in this Invention Disclosure Form is complete, accurate, and true to the best of our knowledge. We submit this disclosure to the IPR Cell, AKGEC, Ghaziabad, for evaluation of patentability.</p>
+
+<table>
+  <tr>
+    <th style="width:30%;">Name of Inventor</th>
+    <th style="width:25%;">Designation / Role</th>
+    <th style="width:20%;">Date</th>
+    <th style="width:25%;">Signature</th>
+  </tr>
+  <tr>
+    <td><strong>Ashu Kumar Maurya</strong></td>
+    <td>Student Inventor (Lead)</td>
+    <td>12/10/2026</td>
+    <td style="height:35px;"></td>
+  </tr>
+  <tr>
+    <td><strong>Vishnukant Yadav</strong></td>
+    <td>Student Co-Inventor</td>
+    <td>12/10/2026</td>
+    <td style="height:35px;"></td>
+  </tr>
+  <tr>
+    <td><strong>Priyanka Maurya</strong></td>
+    <td>Student Co-Inventor</td>
+    <td>12/10/2026</td>
+    <td style="height:35px;"></td>
+  </tr>
+  <tr>
+    <td><strong>Priya</strong></td>
+    <td>Student Co-Inventor</td>
+    <td>12/10/2026</td>
+    <td style="height:35px;"></td>
+  </tr>
+  <tr>
+    <td><strong>Mr. Mahesh Kumar Sharma</strong></td>
+    <td>Assistant Professor (Supervisor)</td>
+    <td>12/10/2026</td>
+    <td style="height:35px;"></td>
+  </tr>
+</table>
+
+</body>
+</html>

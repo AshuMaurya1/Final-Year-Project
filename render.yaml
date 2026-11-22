@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: akgec-trafficai-api
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run setup
+    startCommand: npm start
+    healthCheckPath: /api/intersection/status
+    envVars:
+      - key: NODE_ENV
+        value: production

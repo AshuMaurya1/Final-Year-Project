@@ -6,6 +6,9 @@ import ControlView from './views/ControlView';
 import ModelPerformanceView from './views/ModelPerformanceView';
 import LogsView from './views/LogsView';
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
+const apiUrl = (path) => `${API_BASE_URL}${path}`;
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [mode, setMode] = useState('adaptive');
@@ -65,12 +68,12 @@ export default function App() {
     const fetchData = async () => {
       try {
         const [resStatus, resObs, resPred, resDec, resComp, resAlerts] = await Promise.all([
-          fetch('/api/intersection/status').then(r => r.ok ? r.json() : null),
-          fetch('/api/intersection/observations').then(r => r.ok ? r.json() : null),
-          fetch('/api/predictions').then(r => r.ok ? r.json() : null),
-          fetch('/api/signals/decisions').then(r => r.ok ? r.json() : null),
-          fetch('/api/metrics/comparison').then(r => r.ok ? r.json() : null),
-          fetch('/api/alerts').then(r => r.ok ? r.json() : null),
+          fetch(apiUrl('/api/intersection/status')).then(r => r.ok ? r.json() : null),
+          fetch(apiUrl('/api/intersection/observations')).then(r => r.ok ? r.json() : null),
+          fetch(apiUrl('/api/predictions')).then(r => r.ok ? r.json() : null),
+          fetch(apiUrl('/api/signals/decisions')).then(r => r.ok ? r.json() : null),
+          fetch(apiUrl('/api/metrics/comparison')).then(r => r.ok ? r.json() : null),
+          fetch(apiUrl('/api/alerts')).then(r => r.ok ? r.json() : null),
         ]);
 
         if (resStatus) {
@@ -128,14 +131,14 @@ export default function App() {
 
   // Fetch static analytics & model perf once
   useEffect(() => {
-    fetch('/api/metrics/analytics').then(r => r.ok ? r.json() : null).then(data => data && setAnalyticsData(data)).catch(() => {});
-    fetch('/api/model/performance').then(r => r.ok ? r.json() : null).then(data => data && setModelData(data)).catch(() => {});
+    fetch(apiUrl('/api/metrics/analytics')).then(r => r.ok ? r.json() : null).then(data => data && setAnalyticsData(data)).catch(() => {});
+    fetch(apiUrl('/api/model/performance')).then(r => r.ok ? r.json() : null).then(data => data && setModelData(data)).catch(() => {});
   }, []);
 
   const handleToggleMode = () => {
     const nextMode = mode === 'adaptive' ? 'fixed' : 'adaptive';
     setMode(nextMode);
-    fetch('/api/simulation/control', {
+    fetch(apiUrl('/api/simulation/control'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ mode: nextMode })
@@ -144,7 +147,7 @@ export default function App() {
 
   const handleUpdateSimulation = (payload) => {
     if (payload.mode) setMode(payload.mode);
-    fetch('/api/simulation/control', {
+    fetch(apiUrl('/api/simulation/control'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)

@@ -3,7 +3,7 @@ services:
     name: akgec-trafficai-api
     runtime: node
     plan: free
-    buildCommand: npm install && npm run setup
+    buildCommand: npm install --include=dev && npm --prefix frontend install --include=dev && npm --prefix frontend run build
     startCommand: npm start
     healthCheckPath: /api/intersection/status
     envVars:

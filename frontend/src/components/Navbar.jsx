@@ -1,12 +1,17 @@
 import React from 'react';
-import { LayoutDashboard, LineChart, Sliders, BrainCircuit, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { 
+  LayoutDashboard, LineChart, Sliders, BrainCircuit, 
+  AlertTriangle, ShieldCheck, Camera, BookOpen 
+} from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, mode, isOnline = true }) {
   const tabs = [
     { id: 'dashboard', label: 'Main Intersection', icon: LayoutDashboard },
-    { id: 'analytics', label: 'Traffic Analytics', icon: LineChart },
+    { id: 'vision', label: 'YOLO Vision Pipeline', icon: Camera },
+    { id: 'benchmark', label: 'Research Hypotheses', icon: BookOpen },
     { id: 'control', label: 'Signal Control & Sim', icon: Sliders },
-    { id: 'model', label: 'ML Model Performance', icon: BrainCircuit },
+    { id: 'analytics', label: 'Traffic Analytics', icon: LineChart },
+    { id: 'model', label: 'ML Models (H3)', icon: BrainCircuit },
     { id: 'logs', label: 'Alerts & Logs', icon: AlertTriangle },
   ];
 
@@ -22,16 +27,16 @@ export default function Navbar({ activeTab, setActiveTab, mode, isOnline = true 
             <div>
               <div className="flex items-center space-x-2">
                 <span className="font-bold text-lg text-white tracking-wide">TrafficAI</span>
-                <span className="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono border border-emerald-500/30">
-                  AKGEC 4-WAY
+                <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono border border-emerald-500/30">
+                  AKGEC RESEARCH PIPELINE
                 </span>
               </div>
-              <p className="text-xs text-slate-400">Adaptive Signal Timing & Congestion Prediction</p>
+              <p className="text-[11px] text-slate-400">Prediction-Aware Adaptive Signal Control</p>
             </div>
           </div>
 
           {/* Navigation Tabs */}
-          <nav className="flex space-x-1">
+          <nav className="hidden lg:flex space-x-1">
             {tabs.map((tab) => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -39,13 +44,13 @@ export default function Navbar({ activeTab, setActiveTab, mode, isOnline = true 
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
+                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 ${
                     isActive
-                      ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
+                      ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
                       : 'text-slate-300 hover:bg-slate-800 hover:text-white'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-3.5 h-3.5" />
                   <span>{tab.label}</span>
                 </button>
               );
@@ -53,8 +58,8 @@ export default function Navbar({ activeTab, setActiveTab, mode, isOnline = true 
           </nav>
 
           {/* Status Badges */}
-          <div className="flex items-center space-x-3">
-            <div className={`flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${
+          <div className="flex items-center space-x-2">
+            <div className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider ${
               mode === 'adaptive'
                 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
                 : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
@@ -63,11 +68,33 @@ export default function Navbar({ activeTab, setActiveTab, mode, isOnline = true 
               <span>{mode === 'adaptive' ? 'AI Adaptive' : 'Fixed Baseline'}</span>
             </div>
 
-            <div className="flex items-center space-x-1 px-2.5 py-1 rounded bg-slate-800 text-xs text-slate-300 border border-slate-700">
+            <div className="hidden sm:flex items-center space-x-1 px-2.5 py-1 rounded bg-slate-800 text-[11px] text-slate-300 border border-slate-700">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Failsafe Active</span>
+              <span>Eq. 7 Bounds</span>
             </div>
           </div>
+        </div>
+
+        {/* Mobile/Tablet Tab Bar */}
+        <div className="flex lg:hidden overflow-x-auto py-2 space-x-1 border-t border-slate-800/60 scrollbar-none">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex-shrink-0 flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+                  isActive
+                    ? 'bg-emerald-600 text-white shadow-sm'
+                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </header>

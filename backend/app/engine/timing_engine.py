@@ -1,9 +1,11 @@
 """
 Rule-Based Dynamic Signal-Timing Engine.
-Translates ML congestion predictions and queue estimates into safe, optimal green durations.
+Implements Proportional Time Allocation within Safety Bounds (Equation 7)
+from "AI-Based Traffic Congestion Prediction and Adaptive Signal Control: A Comparative Review"
+(Maurya et al., AKGEC, Ghaziabad).
 """
 
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 from ..config import config
 from ..models.schemas import PredictionOutput, TimingDecision, AlertItem
 from .safety import SafetyGuard
@@ -16,27 +18,52 @@ class DynamicTimingEngine:
         self.yellow = config.timing.yellow_duration
         self.all_red = config.timing.all_red_duration
         self.fallback_g = config.timing.default_fixed_green
+        # Cycle green budget G = 90s - (2 * (4s yellow + 2s all-red)) = 78s
+        self.total_green_budget = 90 - (2 * (self.yellow + self.all_red))
 
     def calculate_phase_timings(
         self, 
         predictions: Dict[str, PredictionOutput],
         queue_lengths: Dict[str, int],
-        emergency_approach: str = None
+        emergency_approach: Optional[str] = None,
+        vision_confidence: float = 0.94
     ) -> Tuple[Dict[str, TimingDecision], List[AlertItem]]:
         """
-        Calculates optimal green durations for NS and EW phases.
-        Accounts for emergency vehicle preemption and safety clamps.
+        Calculates optimal green durations for NS and EW phases using Equation (7):
+        g_k = min(g_max, g_min + (G - K*g_min) * (q_hat_k / sum(q_hat_j)))
+        followed by normalization to ensure sum(g_k) == G.
+        Falls back to safe actuated/fixed plan when detection confidence is low (< 0.65).
         """
         decisions: Dict[str, TimingDecision] = {}
         alerts: List[AlertItem] = []
 
-        # 1. Emergency Preemption Check
+        # 1. Fallback check on low vision confidence (Section VIII-C)
+        if vision_confidence < 0.65:
+            alert = AlertItem(
+                id="SAFETY-FALLBACK-LOW-CONF",
+                severity="WARNING",
+                category="SAFETY",
+                message=f"Vision confidence degraded ({vision_confidence:.2f} < 0.65). Reverting to safety-bounded baseline plan."
+            )
+            alerts.append(alert)
+            for app in config.intersection.approaches:
+                decisions[app] = TimingDecision(
+                    approach=app,
+                    recommended_green_sec=self.fallback_g,
+                    yellow_sec=self.yellow,
+                    all_red_sec=self.all_red,
+                    congestion_level="Medium",
+                    reason="Low vision confidence fallback: Reverted to 30s default green."
+                )
+            return decisions, alerts
+
+        # 2. Emergency Preemption Check (Continuous priority green)
         if emergency_approach and emergency_approach in config.intersection.approaches:
             alert = AlertItem(
                 id=f"EMERGENCY-PREEMPTION-{emergency_approach}",
-                severity="WARNING",
+                severity="CRITICAL",
                 category="OVERRIDE",
-                message=f"Emergency vehicle preemption active on {emergency_approach}! Granting maximum safe priority green."
+                message=f"Emergency vehicle preemption active on {emergency_approach}! Continuous maximum green granted."
             )
             alerts.append(alert)
 
@@ -60,77 +87,85 @@ class DynamicTimingEngine:
                 )
             return decisions, alerts
 
-        # 2. Extract densities and compute approach weights
-        densities = {
-            app: predictions[app].predicted_density if app in predictions else 25.0
-            for app in config.intersection.approaches
-        }
+        # 3. Calculate Phase Predicted Queues (q_hat_k,n+1)
+        # Phase 1: North-South corridor, Phase 2: East-West corridor
+        q_ns = max(
+            queue_lengths.get("North", 0), 
+            queue_lengths.get("South", 0)
+        )
+        q_ew = max(
+            queue_lengths.get("East", 0), 
+            queue_lengths.get("West", 0)
+        )
 
-        # Calculate phase-aggregated demand
-        # Phase NS: max demand of North and South
-        # Phase EW: max demand of East and West
-        ns_density = max(densities.get("North", 25.0), densities.get("South", 25.0))
-        ew_density = max(densities.get("East", 25.0), densities.get("West", 25.0))
-        total_density = ns_density + ew_density
-        if total_density <= 0:
-            total_density = 50.0
+        # Scale with predicted demand density if available
+        dens_ns = max(predictions.get("North", PredictionOutput(approach="North", predicted_density=25.0, congestion_level="Medium")).predicted_density,
+                      predictions.get("South", PredictionOutput(approach="South", predicted_density=25.0, congestion_level="Medium")).predicted_density)
+        dens_ew = max(predictions.get("East", PredictionOutput(approach="East", predicted_density=25.0, congestion_level="Medium")).predicted_density,
+                      predictions.get("West", PredictionOutput(approach="West", predicted_density=25.0, congestion_level="Medium")).predicted_density)
 
-        # Cycle time available for green: 90s standard cycle - yellow and all-red clearance
-        available_green_budget = 90 - (2 * (self.yellow + self.all_red))  # ~78s total green pool
+        q_hat_ns = max(1.0, float(q_ns) * 1.1 + (dens_ns / 30.0))
+        q_hat_ew = max(1.0, float(q_ew) * 1.1 + (dens_ew / 30.0))
+        total_q_hat = q_hat_ns + q_hat_ew
 
-        raw_ns_green = int((ns_density / total_density) * available_green_budget)
-        raw_ew_green = available_green_budget - raw_ns_green
+        # 4. Proportional Allocation Rule (Equation 7)
+        # g_k = min(g_max, g_min + (G - K * g_min) * (q_hat_k / sum(q_hat_j)))
+        K = 2
+        G = self.total_green_budget
+        surplus_pool = G - (K * self.min_g)  # 78 - 20 = 58s
 
-        # Queue length adjustment: extra 1.5s per vehicle in queue beyond 5
-        ns_queue_bonus = int(max(0, max(queue_lengths.get("North", 0), queue_lengths.get("South", 0)) - 5) * 1.5)
-        ew_queue_bonus = int(max(0, max(queue_lengths.get("East", 0), queue_lengths.get("West", 0)) - 5) * 1.5)
+        raw_g_ns = self.min_g + surplus_pool * (q_hat_ns / total_q_hat)
+        raw_g_ew = self.min_g + surplus_pool * (q_hat_ew / total_q_hat)
 
-        raw_ns_green += ns_queue_bonus
-        raw_ew_green += ew_queue_bonus
+        # Clamping within bounds [g_min, g_max]
+        clamped_g_ns = min(self.max_g, max(self.min_g, raw_g_ns))
+        clamped_g_ew = min(self.max_g, max(self.min_g, raw_g_ew))
 
-        # Apply Safety Clamps
-        ns_green, ns_alert = self.safety.validate_timings(raw_ns_green, "North-South Corridor")
-        ew_green, ew_alert = self.safety.validate_timings(raw_ew_green, "East-West Corridor")
-        if ns_alert:
-            alerts.append(ns_alert)
-        if ew_alert:
-            alerts.append(ew_alert)
+        # Normalization step to ensure total green time equals G (78s)
+        alloc_sum = clamped_g_ns + clamped_g_ew
+        if alloc_sum > 0:
+            norm_factor = G / alloc_sum
+            final_g_ns = int(round(clamped_g_ns * norm_factor))
+            final_g_ew = G - final_g_ns
+        else:
+            final_g_ns = G // 2
+            final_g_ew = G - final_g_ns
 
-        # Build Decision objects for all 4 approaches
+        # Validate with SafetyGuard
+        final_g_ns, ns_alert = self.safety.validate_timings(final_g_ns, "North-South Corridor")
+        final_g_ew, ew_alert = self.safety.validate_timings(final_g_ew, "East-West Corridor")
+        if ns_alert: alerts.append(ns_alert)
+        if ew_alert: alerts.append(ew_alert)
+
+        # 5. Populate Decisions
         for app in ["North", "South"]:
             pred = predictions.get(app)
             level = pred.congestion_level if pred else "Medium"
-            density = densities.get(app, 25.0)
-            q = queue_lengths.get(app, 0)
             decisions[app] = TimingDecision(
                 approach=app,
-                recommended_green_sec=ns_green,
+                recommended_green_sec=final_g_ns,
                 yellow_sec=self.yellow,
                 all_red_sec=self.all_red,
                 congestion_level=level,
-                reason=f"Adaptive demand: {density:.1f} veh/min, Queue: {q} veh -> Allocated {ns_green}s"
+                reason=f"Eq. (7) Allocation: q̂_NS={q_hat_ns:.1f} -> Allocated {final_g_ns}s (Safety Bounds: [{self.min_g}s, {self.max_g}s])"
             )
 
         for app in ["East", "West"]:
             pred = predictions.get(app)
             level = pred.congestion_level if pred else "Medium"
-            density = densities.get(app, 25.0)
-            q = queue_lengths.get(app, 0)
             decisions[app] = TimingDecision(
                 approach=app,
-                recommended_green_sec=ew_green,
+                recommended_green_sec=final_g_ew,
                 yellow_sec=self.yellow,
                 all_red_sec=self.all_red,
                 congestion_level=level,
-                reason=f"Adaptive demand: {density:.1f} veh/min, Queue: {q} veh -> Allocated {ew_green}s"
+                reason=f"Eq. (7) Allocation: q̂_EW={q_hat_ew:.1f} -> Allocated {final_g_ew}s (Safety Bounds: [{self.min_g}s, {self.max_g}s])"
             )
 
         return decisions, alerts
 
     def get_fallback_timings(self, reason: str = "Sensor/ML failure") -> Tuple[Dict[str, TimingDecision], List[AlertItem]]:
-        """
-        Failsafe fallback fixed-time schedule (30s green each direction).
-        """
+        """Failsafe fallback fixed-time schedule (30s green each direction)."""
         alert = AlertItem(
             id="FAILSAFE-FALLBACK-TRIGGERED",
             severity="ERROR",

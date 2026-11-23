@@ -6,6 +6,7 @@
   "scripts": {
     "setup": "npm --prefix frontend install && npm --prefix frontend run build",
     "start": "node scripts/ensure-frontend.js && node backend_service/server.js",
-    "dev": "node scripts/ensure-frontend.js && node backend_service/server.js"
+    "dev": "node scripts/ensure-frontend.js && node backend_service/server.js",
+    "test": "node scripts/test-api.js"
   }
 }

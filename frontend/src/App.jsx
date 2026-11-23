@@ -5,6 +5,8 @@ import AnalyticsView from './views/AnalyticsView';
 import ControlView from './views/ControlView';
 import ModelPerformanceView from './views/ModelPerformanceView';
 import LogsView from './views/LogsView';
+import CameraVisionView from './views/CameraVisionView';
+import ResearchBenchmarkView from './views/ResearchBenchmarkView';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
 const apiUrl = (path) => `${API_BASE_URL}${path}`;
@@ -63,7 +65,7 @@ export default function App() {
   const [modelData, setModelData] = useState(null);
   const [alerts, setAlerts] = useState([]);
 
-  // Fetch loop
+  // Live polling loop
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -181,6 +183,14 @@ export default function App() {
           />
         )}
 
+        {activeTab === 'vision' && (
+          <CameraVisionView />
+        )}
+
+        {activeTab === 'benchmark' && (
+          <ResearchBenchmarkView />
+        )}
+
         {activeTab === 'analytics' && (
           <AnalyticsView analyticsData={analyticsData} />
         )}
@@ -203,8 +213,15 @@ export default function App() {
       </main>
 
       <footer className="bg-slate-900 border-t border-slate-800 py-4 text-center text-xs text-slate-400">
-        <p>AI-Based Traffic Congestion Prediction & Dynamic Signal Control System • Final-Year Engineering Project</p>
-        <p className="text-slate-400 mt-1">Ajay Kumar Garg Engineering College (AKGEC) • Computer Science & Engineering</p>
+        <p className="font-semibold text-slate-300">
+          AI-Based Traffic Congestion Prediction & Dynamic Signal Control System • Final-Year Engineering Project
+        </p>
+        <p className="text-slate-400 mt-1">
+          Ajay Kumar Garg Engineering College (AKGEC) • Computer Science & Engineering
+        </p>
+        <p className="text-[11px] text-slate-400 mt-0.5">
+          Based on: Maurya, Yadav, Maurya, Priya, & Sharma (AKGEC) — "AI-Based Traffic Congestion Prediction and Adaptive Signal Control: A Comparative Review"
+        </p>
       </footer>
     </div>
   );
